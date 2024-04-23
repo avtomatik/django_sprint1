@@ -44,18 +44,7 @@ posts = [
     },
 ]
 
-
-def convert_to_dict(container):
-    result = {}
-
-    for item in container:
-        key = item.pop('id')
-        result[key] = item
-
-    return dict(reversed(result.items()))
-
-
-posts = convert_to_dict(posts)
+posts_dict = {_['id']: _ for _ in posts}
 
 
 def index(request):
@@ -65,10 +54,10 @@ def index(request):
 
 
 def post_detail(request, pk):
-    post_content = posts.get(pk)
+    post_content = posts_dict.get(pk)
     if post_content:
-        context = {'post': post_content}
         template = 'blog/detail.html'
+        context = {'post': post_content}
         return render(request, template, context)
     raise Http404(
         'Такого поста не существует :-( Попробуйте вернуться позднее'
